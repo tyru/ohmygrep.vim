@@ -49,7 +49,7 @@ function! omg#_cmd_grep(args, bang) "{{{
         let word = args_list[-1]
     endif
 
-    call omg#do_grep(word, files, a:bang)
+    call omg#grep(word, files, a:bang)
 endfunction "}}}
 
 function! s:grep_parse_args(args, default_flags) "{{{
@@ -70,7 +70,7 @@ function! s:grep_parse_args(args, default_flags) "{{{
     return list
 endfunction "}}}
 
-function! omg#do_grep(word, target_files, ...) "{{{
+function! omg#grep(word, target_files, ...) "{{{
     if a:word == '' || empty(a:target_files)
         return
     endif
