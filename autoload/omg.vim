@@ -45,7 +45,7 @@ function! omg#_cmd_grep(args, bang) "{{{
         let files = deepcopy(g:omg_default_files)
     else
         " :Grep {files}[, {more files}] {pattern}
-        let files = args_list[: 1]
+        let files = args_list[: -2]
         let word = args_list[-1]
     endif
 
