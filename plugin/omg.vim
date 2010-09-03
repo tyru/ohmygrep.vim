@@ -31,8 +31,8 @@ catch
 endtry
 
 
-nnoremap <Plug>(omg-grep-cword) :<C-u>call omg#do_grep(expand('<cword>'), ['**/*'])<CR>
-nnoremap <Plug>(omg-grep-cWORD) :<C-u>call omg#do_grep(expand('<cWORD>'), ['**/*'])<CR>
+nnoremap <Plug>(omg-grep-cword) :<C-u>call omg#grep(expand('<cword>'), ['**/*'])<CR>
+nnoremap <Plug>(omg-grep-cWORD) :<C-u>call omg#grep(expand('<cWORD>'), ['**/*'])<CR>
 
 
 command!
