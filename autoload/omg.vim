@@ -52,17 +52,29 @@ function! omg#_cmd_grep(args, bang) "{{{
     call omg#grep(word, files, a:bang)
 endfunction "}}}
 
+function! s:skip_white(str) "{{{
+    return substitute(a:str, '^\s\+', '', '')
+endfunction "}}}
+
+function! s:parse_pattern(str, pat) "{{{
+    let str = a:str
+    let head = matchstr(str, a:pat)
+    let rest = strpart(str, strlen(head))
+    return [head, rest]
+endfunction "}}}
+
 function! s:grep_parse_args(args, default_flags) "{{{
-    let GREP_WORD_PAT = '^/\(.\{-}[^\\]\)/\([gj]*\)'
+    let GREP_WORD_PAT = '^/.\{-}[^\\]/[gj]*' . '\C'
+    let ARGUMENT_PAT  = '^.\{-}[^\\]\ze\([ \t]\|$\)'
     let args = a:args
     let list = []
     while args != ''
-        let args = parse_args#skip_white(args)
+        let args = s:skip_white(args)
 
         if args =~# GREP_WORD_PAT
-            let [a, args] = parse_args#parse_pattern(args, GREP_WORD_PAT)
+            let [a, args] = s:parse_pattern(args, GREP_WORD_PAT)
         else
-            let [a, args] = parse_args#parse_one_arg_from_q_args(args)
+            let [a, args] = s:parse_pattern(args, ARGUMENT_PAT)
         endif
 
         call add(list, a)
