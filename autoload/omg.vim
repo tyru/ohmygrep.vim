@@ -80,6 +80,12 @@ function! omg#grep(word, target_files, ...) "{{{
     if a:word == '' || empty(a:target_files)
         return
     endif
+    if &modified
+        echohl ErrorMsg
+        echomsg 'buffer is modified.'
+        echohl None
+        return
+    endif
 
     let bang = a:0 ? a:1 : 0
 
