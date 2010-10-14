@@ -30,15 +30,15 @@ function! omg#_cmd_grep(args, bang) "{{{
     endtry
 
     if empty(args_list)
-        " :Grep
+        " :OMGrep
         let word = '/' . @/ . '/' . g:omg_default_flags
         let files = deepcopy(g:omg_default_files)
     elseif len(args_list) == 1
-        " :Grep {pattern}
+        " :OMGrep {pattern}
         let word = args_list[0]
         let files = deepcopy(g:omg_default_files)
     else
-        " :Grep {files}[, {more files}] {pattern}
+        " :OMGrep {files}[, {more files}] {pattern}
         let files = args_list[: -2]
         let word = args_list[-1]
     endif
