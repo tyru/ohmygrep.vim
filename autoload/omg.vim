@@ -18,6 +18,22 @@ function! omg#op_grep(motion_wiseness) "{{{
     " TODO
 endfunction "}}}
 
+function! s:internal_error(msg) "{{{
+    return 'omg: internal error: ' . a:msg
+endfunction "}}}
+
+function! s:lookup_var(varname, ...) "{{{
+    for ns in [b:, w:, t:, g:]
+        if has_key(ns, a:varname)
+            return ns[a:varname]
+        endif
+    endfor
+    if a:0
+        return a:1
+    else
+        throw s:internal_error("cannot find variable '" . a:varname . "'.")
+    endif
+endfunction "}}}
 
 function! omg#_cmd_grep(args, bang) "{{{
     try
@@ -32,11 +48,11 @@ function! omg#_cmd_grep(args, bang) "{{{
     if empty(args_list)
         " :OMGrep
         let [word, flags] = [@/, g:omg_default_flags]
-        let files = deepcopy(g:omg_default_files)
+        let files = deepcopy(s:lookup_var('omg_default_files'))
     elseif len(args_list) == 1
         " :OMGrep {pattern}
         let [word, flags] = s:split_grep_pattern(args_list[0])
-        let files = deepcopy(g:omg_default_files)
+        let files = deepcopy(s:lookup_var('omg_default_files'))
     else
         " :OMGrep {files}[, {more files}] {pattern}
         let [word, flags] = s:split_grep_pattern(args_list[-1])
