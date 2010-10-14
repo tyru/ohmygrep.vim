@@ -116,7 +116,7 @@ function! omg#grep(word, flags, target_files) "{{{
     let no_ic = stridx(a:flags, 'I') != -1
     if ic && no_ic
         echohl ErrorMsg
-        echomsg "flags i and I cannot be used together."
+        echomsg 'i and I flags cannot be used together.'
         echohl None
         return
     elseif ic || no_ic
