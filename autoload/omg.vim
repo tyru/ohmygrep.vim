@@ -94,6 +94,7 @@ function! omg#grep(word, target_files, ...) "{{{
         \   'vimgrep' . (bang ? '!' : '')
         \   a:word
         \   join(a:target_files)
+        let @/ = a:word
     catch
         echohl ErrorMsg
         echomsg v:exception v:throwpoint
