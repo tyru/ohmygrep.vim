@@ -31,19 +31,19 @@ function! omg#_cmd_grep(args, bang) "{{{
 
     if empty(args_list)
         " :OMGrep
-        let word = '/' . @/ . '/' . g:omg_default_flags
+        let [word, flags] = [@/, g:omg_default_flags]
         let files = deepcopy(g:omg_default_files)
     elseif len(args_list) == 1
         " :OMGrep {pattern}
-        let word = args_list[0]
+        let [word, flags] = s:split_grep_pattern(args_list[0])
         let files = deepcopy(g:omg_default_files)
     else
         " :OMGrep {files}[, {more files}] {pattern}
+        let [word, flags] = s:split_grep_pattern(args_list[-1])
         let files = args_list[: -2]
-        let word = args_list[-1]
     endif
 
-    call omg#grep(word, files, a:bang)
+    call omg#grep(word, flags, files, a:bang)
 endfunction "}}}
 
 function! s:skip_white(str) "{{{
@@ -55,6 +55,16 @@ function! s:parse_pattern(str, pat) "{{{
     let head = matchstr(str, a:pat)
     let rest = strpart(str, strlen(head))
     return [head, rest]
+endfunction "}}}
+
+function! s:split_grep_pattern(args) "{{{
+    let GREP_WORD_PAT = '^/\(.\{-}[^\\]\)/\([gj]*\)$' . '\C'
+    let m = matchlist(a:args, GREP_WORD_PAT)
+    if !empty(m)
+        return [m[1], m[2]]
+    else
+        return [a:args, '']
+    endif
 endfunction "}}}
 
 function! s:grep_parse_args(args) "{{{
@@ -76,7 +86,7 @@ function! s:grep_parse_args(args) "{{{
     return list
 endfunction "}}}
 
-function! omg#grep(word, target_files, ...) "{{{
+function! omg#grep(word, flags, target_files, ...) "{{{
     if a:word == '' || empty(a:target_files)
         return
     endif
@@ -92,7 +102,7 @@ function! omg#grep(word, target_files, ...) "{{{
     try
         execute
         \   'vimgrep' . (bang ? '!' : '')
-        \   a:word
+        \   '/' . a:word . '/' . a:flags
         \   join(a:target_files)
         let @/ = a:word
     catch
