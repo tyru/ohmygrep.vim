@@ -106,11 +106,24 @@ function! s:grep_parse_args(args) "{{{
 endfunction "}}}
 
 function! omg#grep(word, flags, target_files) "{{{
-    if a:word == '' || empty(a:target_files)
+    let word = a:word
+    if word == '' || empty(a:target_files)
         return
     endif
 
     let bang = stridx(a:flags, '!') != -1
+    let ic = stridx(a:flags, 'i') != -1
+    let no_ic = stridx(a:flags, 'I') != -1
+    if ic && no_ic
+        echohl ErrorMsg
+        echomsg "flags i and I cannot be used together."
+        echohl None
+        return
+    elseif ic || no_ic
+        let word = word
+        \   . (ic ? '\c' : '')
+        \   . (no_ic ? '\C' : '')
+    endif
     let builtin_flags = join(filter(split(a:flags, '\zs'), 'v:val =~# "^[gj]$"'), '')
 
     if &modified && !bang
@@ -123,9 +136,9 @@ function! omg#grep(word, flags, target_files) "{{{
     try
         execute
         \   'vimgrep' . (bang ? '!' : '')
-        \   '/' . a:word . '/' . builtin_flags
+        \   '/' . word . '/' . builtin_flags
         \   join(a:target_files)
-        let @/ = a:word
+        let @/ = word
     catch
         echohl ErrorMsg
         echomsg v:exception v:throwpoint
