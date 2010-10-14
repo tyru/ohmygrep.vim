@@ -58,8 +58,11 @@ function! omg#_cmd_grep(args, bang) "{{{
         let [word, flags] = s:split_grep_pattern(args_list[-1])
         let files = args_list[: -2]
     endif
+    if a:bang
+        let flags .= '!'
+    endif
 
-    call omg#grep(word, flags, files, a:bang)
+    call omg#grep(word, flags, files)
 endfunction "}}}
 
 function! s:skip_white(str) "{{{
@@ -74,7 +77,7 @@ function! s:parse_pattern(str, pat) "{{{
 endfunction "}}}
 
 function! s:split_grep_pattern(args) "{{{
-    let GREP_WORD_PAT = '^/\(.\{-}[^\\]\)/\([gj]*\)$' . '\C'
+    let GREP_WORD_PAT = '^/\(.\{-}[^\\]\)/\(\S*\)$' . '\C'
     let m = matchlist(a:args, GREP_WORD_PAT)
     if !empty(m)
         return [m[1], m[2]]
@@ -84,7 +87,7 @@ function! s:split_grep_pattern(args) "{{{
 endfunction "}}}
 
 function! s:grep_parse_args(args) "{{{
-    let GREP_WORD_PAT = '^/.\{-}[^\\]/[gj]*' . '\C'
+    let GREP_WORD_PAT = '^/.\{-}[^\\]/\S*' . '\C'
     let ARGUMENT_PAT  = '^.\{-}[^\\]\ze\([ \t]\|$\)'
     let args = a:args
     let list = []
@@ -102,23 +105,25 @@ function! s:grep_parse_args(args) "{{{
     return list
 endfunction "}}}
 
-function! omg#grep(word, flags, target_files, ...) "{{{
+function! omg#grep(word, flags, target_files) "{{{
     if a:word == '' || empty(a:target_files)
         return
     endif
-    if &modified
+
+    let bang = stridx(a:flags, '!') != -1
+    let builtin_flags = join(filter(split(a:flags, '\zs'), 'v:val =~# "^[gj]$"'), '')
+
+    if &modified && !bang
         echohl ErrorMsg
         echomsg 'buffer is modified.'
         echohl None
         return
     endif
 
-    let bang = a:0 ? a:1 : 0
-
     try
         execute
         \   'vimgrep' . (bang ? '!' : '')
-        \   '/' . a:word . '/' . a:flags
+        \   '/' . a:word . '/' . builtin_flags
         \   join(a:target_files)
         let @/ = a:word
     catch
