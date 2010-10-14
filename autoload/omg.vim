@@ -21,7 +21,7 @@ endfunction "}}}
 
 function! omg#_cmd_grep(args, bang) "{{{
     try
-        let args_list = s:grep_parse_args(a:args, g:omg_default_flags)
+        let args_list = s:grep_parse_args(a:args)
     catch /^parse error$/
         echohl WarningMsg
         echomsg v:exception
@@ -57,7 +57,7 @@ function! s:parse_pattern(str, pat) "{{{
     return [head, rest]
 endfunction "}}}
 
-function! s:grep_parse_args(args, default_flags) "{{{
+function! s:grep_parse_args(args) "{{{
     let GREP_WORD_PAT = '^/.\{-}[^\\]/[gj]*' . '\C'
     let ARGUMENT_PAT  = '^.\{-}[^\\]\ze\([ \t]\|$\)'
     let args = a:args
