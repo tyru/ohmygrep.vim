@@ -89,10 +89,16 @@ function! omg#grep(word, target_files, ...) "{{{
 
     let bang = a:0 ? a:1 : 0
 
-    execute
-    \   'vimgrep' . (bang ? '!' : '')
-    \   a:word
-    \   join(a:target_files)
+    try
+        execute
+        \   'vimgrep' . (bang ? '!' : '')
+        \   a:word
+        \   join(a:target_files)
+    catch
+        echohl ErrorMsg
+        echomsg v:exception v:throwpoint
+        echohl None
+    endtry
 endfunction "}}}
 
 
