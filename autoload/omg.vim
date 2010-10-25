@@ -57,6 +57,9 @@ function! omg#_cmd_grep(args, bang) "{{{
     if a:bang
         let flags .= '!'
     endif
+    if flags == ''
+        let flags = g:omg_default_flags
+    endif
 
     call omg#grep(word, flags, files)
 endfunction "}}}
