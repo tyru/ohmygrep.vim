@@ -104,6 +104,18 @@ function! s:grep_parse_args(args) "{{{
     return list
 endfunction "}}}
 
+function! s:flatten(list) "{{{
+    let ret = []
+    for l in a:list
+        if type(l) == type([])
+            call extend(ret, s:flatten(l))
+        else
+            call add(ret, l)
+        endif
+    endfor
+    return ret
+endfunction "}}}
+
 function! omg#grep(word, flags, target_files) "{{{
     let word = a:word
     if word == '' || empty(a:target_files)
@@ -132,17 +144,27 @@ function! omg#grep(word, flags, target_files) "{{{
         return
     endif
 
+    let files = a:target_files
+    if !empty(g:omg_ignore_basename)
+        " Expand globs to actual filenames
+        " to exclude ignore files.
+        let files = s:flatten(map(files, 'split(expand(v:val), "\n")'))
+        for basename in g:omg_ignore_basename
+            let files = filter(files, 'fnamemodify(v:val, ":t") !=# basename && filereadable(v:val)')
+        endfor
+    endif
+
     try
         if g:omg_use_vimgrep
             silent execute
             \   'vimgrep' . (bang ? '!' : '')
             \   '/' . word . '/' . builtin_flags
-            \   join(a:target_files)
+            \   join(files)
         else
             silent execute
             \   'grep' . (bang ? '!' : '')
             \   word
-            \   join(a:target_files)
+            \   join(files)
         endif
         let @/ = word
     catch

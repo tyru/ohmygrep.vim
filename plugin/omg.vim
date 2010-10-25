@@ -23,6 +23,24 @@ if !exists('g:omg_default_flags')
     let g:omg_default_flags = 'j'
 endif
 
+if !exists('g:omg_ignore_basename')
+    let g:omg_ignore_basename = [
+    \   '.bzr',
+    \   '.git',
+    \   '.hg',
+    \   '.svn',
+    \   'CVS',
+    \   'RCS',
+    \   'SCCS',
+    \   '_darcs',
+    \   '_sgbak',
+    \
+    \   'autom4te.cache',
+    \
+    \   'tags',
+    \]
+endif
+
 if !exists('g:omg_use_vimgrep')
     let g:omg_use_vimgrep = 1
 endif
