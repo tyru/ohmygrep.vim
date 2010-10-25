@@ -121,8 +121,14 @@ function! omg#grep(word, flags, target_files) "{{{
     if word == '' || empty(a:target_files)
         return
     endif
-
     let bang = stridx(a:flags, '!') != -1
+    if &modified && !bang
+        echohl ErrorMsg
+        echomsg 'buffer is modified.'
+        echohl None
+        return
+    endif
+
     let ic = stridx(a:flags, 'i') != -1
     let no_ic = stridx(a:flags, 'I') != -1
     if ic && no_ic
@@ -137,12 +143,6 @@ function! omg#grep(word, flags, target_files) "{{{
     endif
     let builtin_flags = join(filter(split(a:flags, '\zs'), 'v:val =~# "^[gj]$"'), '')
 
-    if &modified && !bang
-        echohl ErrorMsg
-        echomsg 'buffer is modified.'
-        echohl None
-        return
-    endif
 
     let files = a:target_files
     if !empty(g:omg_ignore_basename)
