@@ -23,6 +23,10 @@ if !exists('g:omg_default_flags')
     let g:omg_default_flags = 'j'
 endif
 
+if !exists('g:omg_use_vimgrep')
+    let g:omg_use_vimgrep = 1
+endif
+
 
 try
     call operator#user#define('grep', 'omg#op_grep')

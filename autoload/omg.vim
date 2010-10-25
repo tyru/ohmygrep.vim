@@ -135,10 +135,17 @@ function! omg#grep(word, flags, target_files) "{{{
     endif
 
     try
-        execute
-        \   'vimgrep' . (bang ? '!' : '')
-        \   '/' . word . '/' . builtin_flags
-        \   join(a:target_files)
+        if g:omg_use_vimgrep
+            execute
+            \   'vimgrep' . (bang ? '!' : '')
+            \   '/' . word . '/' . builtin_flags
+            \   join(a:target_files)
+        else
+            silent execute
+            \   'grep' . (bang ? '!' : '')
+            \   word
+            \   join(a:target_files)
+        endif
         let @/ = word
     catch
         echohl ErrorMsg
