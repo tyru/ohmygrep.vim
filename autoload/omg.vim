@@ -167,6 +167,10 @@ function! omg#grep(word, flags, target_files) "{{{
             \   join(files)
         endif
         let @/ = word
+    catch /E480:/    " No match
+        echohl WarningMsg
+        echomsg "ohmygrep: No match: '" . word . "'"
+        echohl None
     catch
         echohl ErrorMsg
         echomsg v:exception v:throwpoint
