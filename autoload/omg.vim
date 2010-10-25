@@ -45,12 +45,7 @@ function! omg#_cmd_grep(args, bang) "{{{
         return
     endtry
 
-    if empty(args_list)
-        " :OMGrep
-        let omg_default_flags = s:lookup_var('omg_default_flags')
-        let [word, flags] = [@/, omg_default_flags]
-        let files = deepcopy(omg_default_flags)
-    elseif len(args_list) == 1
+    if len(args_list) == 1
         " :OMGrep {pattern}
         let [word, flags] = s:split_grep_pattern(args_list[0])
         let files = deepcopy(s:lookup_var('omg_default_files'))
