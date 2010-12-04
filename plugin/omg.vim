@@ -58,7 +58,7 @@ nnoremap <Plug>(omg-grep-cWORD) :<C-u>call omg#grep(expand('<cWORD>'), g:omg_def
 
 
 command!
-\   -nargs=+ -bang -nargs=* -complete=file
+\   -bang -nargs=* -complete=file
 \   OMGrep
 \   call omg#_cmd_grep(<q-args>, <bang>0)
 
