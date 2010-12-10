@@ -62,6 +62,10 @@ command!
 \   OMGrep
 \   call omg#_cmd_grep(<q-args>, <bang>0)
 
+command!
+\   -nargs=+
+\   OMReplace
+\   call omg#_cmd_replace(<f-args>)
 
 
 " Restore 'cpoptions' {{{

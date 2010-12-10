@@ -64,6 +64,20 @@ function! omg#_cmd_grep(args, bang) "{{{
     call omg#grep(word, flags, files)
 endfunction "}}}
 
+function! omg#_cmd_replace(files, pattern, string, ...) "{{{
+    let flags = a:0 ? a:1 : 'gce'
+    let org_argv = argv()
+    try
+        execute 'argadd' a:files
+        execute
+        \   'argdo'
+        \   '%s/' . a:pattern . '/' . a:string . '/' . flags
+        \   '| update'
+    finally
+        execute 'argadd' join(org_argv)
+    endtry
+endfunction "}}}
+
 function! s:skip_white(str) "{{{
     return substitute(a:str, '^\s\+', '', '')
 endfunction "}}}
