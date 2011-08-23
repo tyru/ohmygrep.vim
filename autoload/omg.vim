@@ -122,18 +122,6 @@ function! s:grep_parse_args(args) "{{{
     return list
 endfunction "}}}
 
-function! s:flatten(list) "{{{
-    let ret = []
-    for l in a:list
-        if type(l) == type([])
-            call extend(ret, s:flatten(l))
-        else
-            call add(ret, l)
-        endif
-    endfor
-    return ret
-endfunction "}}}
-
 function! omg#grep(word, flags, target_files) "{{{
     let word = a:word
     if word == '' || empty(a:target_files)
@@ -163,13 +151,25 @@ function! omg#grep(word, flags, target_files) "{{{
 
 
     let files = a:target_files
-    if !empty(g:omg_ignore_basename)
+    if !empty(g:omg_wildignore)
         " Expand globs to actual filenames
         " to exclude ignore files.
-        let files = s:flatten(map(files, 'split(expand(v:val), "\n")'))
-        for basename in g:omg_ignore_basename
-            let files = filter(files, 'fnamemodify(v:val, ":t") !=# basename && filereadable(v:val)')
-        endfor
+        let save_wildignore = &wildignore
+        let omg_wildignore = join(g:omg_wildignore, ',')
+        if &wildignore !=# omg_wildignore
+            let &wildignore = omg_wildignore
+        endif
+        try
+            let result = []
+            for _ in files
+                let result += split(glob(_), "\n")
+            endfor
+            let files = result
+        finally
+            if &wildignore !=# save_wildignore
+                let &wildignore = save_wildignore
+            endif
+        endtry
     endif
 
     try

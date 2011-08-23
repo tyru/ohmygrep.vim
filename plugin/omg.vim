@@ -23,8 +23,8 @@ if !exists('g:omg_default_flags')
     let g:omg_default_flags = 'j'
 endif
 
-if !exists('g:omg_ignore_basename')
-    let g:omg_ignore_basename = [
+if !exists('g:omg_wildignore')
+    let g:omg_wildignore = [
     \   '.bzr',
     \   '.git',
     \   '.hg',
