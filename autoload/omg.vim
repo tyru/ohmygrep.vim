@@ -172,18 +172,25 @@ function! omg#grep(word, flags, target_files) "{{{
         endtry
     endif
 
+    augroup omg-temp-event
+        autocmd!
+        autocmd QuickFixCmdPre * :
+        autocmd QuickFixCmdPost * :
+    augroup END
     try
+        doautocmd QuickFixCmdPre
         if g:omg_use_vimgrep
-            silent execute
+            noautocmd silent execute
             \   'vimgrep' . (bang ? '!' : '')
             \   '/' . word . '/' . builtin_flags
             \   join(files)
         else
-            silent execute
+            noautocmd silent execute
             \   'grep' . (bang ? '!' : '')
             \   word
             \   join(files)
         endif
+        doautocmd QuickFixCmdPost
         let @/ = word
     catch /E480:/    " No match
         echohl WarningMsg
@@ -193,6 +200,8 @@ function! omg#grep(word, flags, target_files) "{{{
         echohl ErrorMsg
         echomsg v:exception v:throwpoint
         echohl None
+    finally
+        autocmd! omg-temp-event
     endtry
 endfunction "}}}
 
