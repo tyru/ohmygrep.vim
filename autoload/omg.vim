@@ -94,13 +94,15 @@ function! s:parse_pattern(str, pat) "{{{
 endfunction "}}}
 
 function! s:split_grep_pattern(args) "{{{
-    let GREP_WORD_PAT = '^/\(.\{-}[^\\]\)/\(\S*\)$' . '\C'
-    let m = matchlist(a:args, GREP_WORD_PAT)
-    if !empty(m)
-        return [m[1], m[2]]
-    else
-        return [a:args, '']
-    endif
+    let pattern_without_slash = '\(.\{-}[^\\]\)' . '\C'
+    let pattern_with_slash = '^/' . pattern_without_slash . '/\(\S*\)$' . '\C'
+    for pat in [pattern_with_slash, pattern_without_slash]
+        let m = matchlist(a:args, pat)
+        if !empty(m)
+            return [m[1], m[2]]
+        endif
+    endfor
+    return [a:args, '']
 endfunction "}}}
 
 function! s:grep_parse_args(args) "{{{
