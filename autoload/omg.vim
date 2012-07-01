@@ -82,6 +82,24 @@ function! omg#_cmd_replace(files, pattern, string, ...) "{{{
     endtry
 endfunction "}}}
 
+function! omg#_cmd_find(...) "{{{
+    let path = a:0 ? a:1 : '.'
+    if !isdirectory(path)
+        echohl ErrorMsg
+        echomsg 'error: 1st argument of :OMFind must be a target directory.'
+        echohl None
+        return
+    endif
+
+    let org_path = getcwd()
+    lcd `=path`
+    try
+        OMGrep /\%1l/
+    finally
+        lcd `=org_path`
+    endtry
+endfunction "}}}
+
 function! s:skip_white(str) "{{{
     return substitute(a:str, '^\s\+', '', '')
 endfunction "}}}

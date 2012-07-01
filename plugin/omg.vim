@@ -67,6 +67,11 @@ command!
 \   OMReplace
 \   call omg#_cmd_replace(<f-args>)
 
+command!
+\   -nargs=* -complete=dir
+\   OMFind
+\   call omg#_cmd_find(<f-args>)
+
 
 " Restore 'cpoptions' {{{
 let &cpo = s:save_cpo
