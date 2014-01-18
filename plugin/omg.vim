@@ -53,8 +53,17 @@ catch
 endtry
 
 
+let s:V = vital#of('open-browser.vim')
+let s:Buffer = s:V.import('Vim.Buffer')
+function! s:get_selected_text()
+    return s:Buffer.get_selected_text()
+endfunction
+
 nnoremap <Plug>(omg-grep-cword) :<C-u>call omg#grep(expand('<cword>'), g:omg_default_flags, ['**/*'])<CR>
 nnoremap <Plug>(omg-grep-cWORD) :<C-u>call omg#grep(expand('<cWORD>'), g:omg_default_flags, ['**/*'])<CR>
+
+vnoremap <Plug>(omg-grep-cword) :<C-u>call omg#grep(<SID>get_selected_text(), g:omg_default_flags, ['**/*'])<CR>
+vnoremap <Plug>(omg-grep-cWORD) :<C-u>call omg#grep(<SID>get_selected_text(), g:omg_default_flags, ['**/*'])<CR>
 
 
 command!
