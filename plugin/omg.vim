@@ -62,8 +62,7 @@ endfunction
 nnoremap <Plug>(omg-grep-cword) :<C-u>call omg#grep(expand('<cword>'), g:omg_default_flags, ['**/*'])<CR>
 nnoremap <Plug>(omg-grep-cWORD) :<C-u>call omg#grep(expand('<cWORD>'), g:omg_default_flags, ['**/*'])<CR>
 
-vnoremap <Plug>(omg-grep-cword) :<C-u>call omg#grep(<SID>get_selected_text(), g:omg_default_flags, ['**/*'])<CR>
-vnoremap <Plug>(omg-grep-cWORD) :<C-u>call omg#grep(<SID>get_selected_text(), g:omg_default_flags, ['**/*'])<CR>
+vnoremap <Plug>(omg-grep-selected) :<C-u>call omg#grep(<SID>get_selected_text(), g:omg_default_flags, ['**/*'])<CR>
 
 
 command!
