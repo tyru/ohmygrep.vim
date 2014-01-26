@@ -20,7 +20,7 @@ if !exists('g:omg_default_files')
 endif
 
 if !exists('g:omg_default_flags')
-    let g:omg_default_flags = 'j'
+    let g:omg_default_flags = 'j' . (&smartcase ? 's' : '')
 endif
 
 if !exists('g:omg_wildignore')

@@ -155,18 +155,27 @@ function! omg#grep(word, flags, target_files) "{{{
         return
     endif
 
-    let ic = stridx(a:flags, 'i') != -1
-    let no_ic = stridx(a:flags, 'I') != -1
-    if ic && no_ic
-        echohl ErrorMsg
-        echomsg 'i and I flags cannot be used together.'
-        echohl None
-        return
-    elseif ic || no_ic
-        let word = word
-        \   . (ic ? '\c' : '')
-        \   . (no_ic ? '\C' : '')
+    " 's' flags
+    if stridx(a:flags, 's') != -1
+        if word =~# '[A-Z]'
+            let word = word . '\C'
+        endif
+    else
+        " 'i', 'I' flags
+        let ic = stridx(a:flags, 'i') != -1
+        let no_ic = stridx(a:flags, 'I') != -1
+        if ic && no_ic
+            echohl ErrorMsg
+            echomsg 'i and I flags cannot be used together.'
+            echohl None
+            return
+        elseif ic || no_ic
+            let word = word
+            \   . (ic ? '\c' : '')
+            \   . (no_ic ? '\C' : '')
+        endif
     endif
+
     let builtin_flags = join(filter(split(a:flags, '\zs'), 'v:val =~# "^[gj]$"'), '')
 
 
