@@ -176,6 +176,11 @@ function! omg#grep(word, flags, target_files) "{{{
         endif
     endif
 
+    " 'w' flags
+    if stridx(a:flags, 'w') != -1
+        let word = '\<' . word . '\>'
+    endif
+
     let builtin_flags = join(filter(split(a:flags, '\zs'), 'v:val =~# "^[gj]$"'), '')
 
 
