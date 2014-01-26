@@ -53,7 +53,7 @@ catch
 endtry
 
 
-let s:V = vital#of('open-browser.vim')
+let s:V = vital#of('ohmygrep')
 let s:Buffer = s:V.import('Vim.Buffer')
 function! s:get_selected_text()
     return s:Buffer.get_selected_text()
