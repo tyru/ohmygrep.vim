@@ -53,9 +53,15 @@ catch
 endtry
 
 
-let s:V = vital#of('ohmygrep')
-let s:Buffer = s:V.import('Vim.Buffer')
+let s:V = {}
+let s:Buffer = {}
 function! s:get_selected_text()
+    if empty(s:V)
+        let s:V = vital#of('ohmygrep')
+    endif
+    if empty(s:Buffer)
+        let s:Buffer = s:V.import('Vim.Buffer')
+    endif
     return s:Buffer.get_selected_text()
 endfunction
 
