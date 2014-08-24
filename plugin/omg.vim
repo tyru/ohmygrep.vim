@@ -63,7 +63,7 @@ function! s:get_selected_text()
         let s:Buffer = s:V.import('Vim.Buffer')
         unlet s:V
     endif
-    return s:Buffer.get_selected_text()
+    return s:Buffer.get_last_selected()
 endfunction
 
 nnoremap <Plug>(omg-grep-cword) :<C-u>call omg#grep(expand('<cword>'), g:omg_default_flags, ['**/*'])<CR>
