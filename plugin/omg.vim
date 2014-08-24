@@ -61,6 +61,7 @@ function! s:get_selected_text()
     endif
     if empty(s:Buffer)
         let s:Buffer = s:V.import('Vim.Buffer')
+        unlet s:V
     endif
     return s:Buffer.get_selected_text()
 endfunction
